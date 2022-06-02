@@ -1,0 +1,21 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <div>This is Home</div>
+    <div th:object="${member}" >
+        <div><a href="/setupPrice" th:if="*{accessToken != 'ANONYMOUS'}">First: Go to Setup</a></div>
+        <div><a href="/getInfo" th:if="*{accessToken != 'ANONYMOUS'}">Second: Check up Setup</a></div>
+        <div><a href="/logout" th:if="*{accessToken != 'ANONYMOUS'}">Logout</a></div>
+        <div><a href="/login" th:unless="*{accessToken != 'ANONYMOUS'}">Login</a></div>
+    </div>
+
+</body>
+</html>

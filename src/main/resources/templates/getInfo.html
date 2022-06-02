@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<div>This is Check up</div>
+
+<div th:each="manu : ${manual}">
+    <div th:text="*{manu.fieldName}">
+
+    </div>
+    <div th:text="*{manu.value}">
+
+    </div>
+</div>
+
+<div th:if="cust != null"  th:each="cust : ${custom}">
+    <div th:text="*{cust.fieldName}">
+
+    </div>
+
+    <div th:if="custom_value_form != null" th:each="custom_value_form : ${custom_value_form}">
+        <div th:text="*{custom_value_form.fieldName}">
+
+        </div>
+        <div th:text="*{custom_value_form.value}">
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="module">
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+  import {getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword}  from 'https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js'
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDlh3LtIniut_lydGKYpDmFYtjtWQ8k0qw",
+    authDomain: "asset-calculator.firebaseapp.com",
+    projectId: "asset-calculator",
+    storageBucket: "asset-calculator.appspot.com",
+    messagingSenderId: "505275850922",
+    appId: "1:505275850922:web:25da447155dc7fb24e30d3",
+    measurementId: "G-7E4F2FQYWF"
+  };
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+
+  // createUserWithEmailAndPassword(auth, email, password)
+  //     .then((userCredential) => {
+  //         // Signed in
+  //         var user = userCredential.user;
+  //         // ...
+  //         console.log(user)
+  //     })
+  //     .catch((error) => {
+  //         var errorCode = error.code;
+  //         var errorMessage = error.message;
+  //         // ..
+  //     });
+
+
+  signInWithPopup(auth, provider)
+          .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            // The signed-in user info.
+            const user = result.user;
+
+            console.log(user)
+
+            let loginInfo = document.querySelectorAll(".loginInfo")
+            loginInfo[0].value = user['uid']
+            loginInfo[1].value = user['accessToken']
+            loginInfo[2].value = user['email']
+            loginInfo[3].value = user['displayName']
+
+            document.querySelector("#loginForm").submit()
+
+
+
+          }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+  });
+
+</script>
+<body>
+  <form action="/login" method="POST" id="loginForm">
+    <input type="hidden" class="loginInfo" th:field="${member.uid}" id="uid"/>
+    <input type="hidden" class="loginInfo" th:field="${member.accessToken}" id="accessToken"/>
+    <input type="hidden" class="loginInfo" th:field="${member.email}" id="email"/>
+    <input type="hidden" class="loginInfo" th:field="${member.displayName}" id="displayName"/>
+  </form>
+</body>
+</html>

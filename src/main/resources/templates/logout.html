@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="module">
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+  import {getAuth, signOut, GoogleAuthProvider, createUserWithEmailAndPassword}  from 'https://www.gstatic.com/firebasejs/9.8.1/firebase-auth.js'
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDlh3LtIniut_lydGKYpDmFYtjtWQ8k0qw",
+    authDomain: "asset-calculator.firebaseapp.com",
+    projectId: "asset-calculator",
+    storageBucket: "asset-calculator.appspot.com",
+    messagingSenderId: "505275850922",
+    appId: "1:505275850922:web:25da447155dc7fb24e30d3",
+    measurementId: "G-7E4F2FQYWF"
+  };
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+  const auth = getAuth();
+  signOut(auth).then(() => {
+    // Sign-out successful.
+    console.log("logout Success");
+    location.href = "/";
+  }).catch((error) => {
+    // An error happened.
+    console.log(error)
+  });
+
+</script>
+<body>
+
+</body>
+</html>

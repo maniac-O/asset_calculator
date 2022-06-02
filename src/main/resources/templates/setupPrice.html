@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/setupPrice.css" rel="stylesheet">
+</head>
+<body>
+    <form action="/" method="GET" id="setupForm">
+        <div class="wrap-setupData" th:id="'wrap-'+*{v}" th:each="v, i : ${fieldGroup}">
+            <div th:class="labelSetUpData" th:text="*{v}"></div>
+            <input type="number" class="setupData" th:id="*{v}"/>
+            <span class="percent" th:id="*{v}+'_percent'"></span>
+        </div>
+        <div id="valid-overload"></div>
+    </form>
+    <div class="appended-items">
+
+    </div>
+    <button type="button" id="add" value="Add">Add</button>
+    <button type="button" id="setupPriceSubmit" value="Submit">Submit</button>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/js/setupScript/sendtoServ.js"></script>
+    <script src="/js/setupScript/statsCalc.js"></script>
+</body>
+</html>
