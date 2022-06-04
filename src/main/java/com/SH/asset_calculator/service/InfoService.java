@@ -1,5 +1,6 @@
 package com.SH.asset_calculator.service;
 
+import com.SH.asset_calculator.domain.ConfigModel;
 import com.SH.asset_calculator.domain.Field;
 import com.SH.asset_calculator.domain.Member;
 import com.SH.asset_calculator.exception.BadArgumentException;
@@ -24,6 +25,45 @@ public class InfoService {
 
     private final InfoRepository infoRepository;
     private final ValidSetupPrice validSetupPrice;
+
+    public Boolean setInfo(Member member, Map<String, String> dataSet) throws BadArgumentException {
+
+        HashMap<String, HashMap> param = new HashMap<>();
+        HashMap<String, String> smallParam = new HashMap<>();
+
+        System.out.println("dataSet = " + dataSet);
+
+        if (dataSet.isEmpty()) {
+            log.warn("From Config, Empty Argument"+member.getUid());
+            return false;
+        }
+
+        for (String key : dataSet.keySet()) {
+            System.out.println("dataSet.Key = " + dataSet.get(key)+member.getUid());
+            if (dataSet.get(key).isEmpty()) {
+                log.warn("Bad Argu");
+                return false;
+            }
+            smallParam.put(key, dataSet.get(key));
+        }
+        param.put("config_value",smallParam);
+
+        infoRepository.setConfig(member, param);
+
+        return true;
+    }
+
+    public ConfigModel getInfo(Member member) {
+        DocumentSnapshot result = infoRepository.getConfig(member);
+
+        if (result.get("config_value") == null) {
+            return null;
+        }
+
+        HashMap<String, String> hashMap = stringToMap(result.get("config_value").toString());
+
+        return new ConfigModel(hashMap.get("scope"));
+    }
 
     public ArrayList parseInput(Member member, Map dataSet) throws BadArgumentException {
         JSONParser parser = new JSONParser(dataSet.get("list").toString());

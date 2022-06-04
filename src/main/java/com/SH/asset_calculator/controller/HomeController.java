@@ -2,6 +2,7 @@ package com.SH.asset_calculator.controller;
 
 import com.SH.asset_calculator.domain.Member;
 import com.SH.asset_calculator.domain.MemberFromSession;
+import com.SH.asset_calculator.service.InfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +16,6 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
-
     private final MemberFromSession memberFromSession;
 
     @GetMapping("/")

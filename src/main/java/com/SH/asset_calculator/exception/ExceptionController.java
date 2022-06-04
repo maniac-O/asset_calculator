@@ -16,6 +16,7 @@ public class ExceptionController {
 
     @ExceptionHandler(BadArgumentException.class)
     public ResponseEntity badArgument() {
-        return new ResponseEntity("BAD", HttpStatus.PAYMENT_REQUIRED);
+        return new ResponseEntity("<div>Bad Request</div>" +
+                "<a href='/' go to home>", HttpStatus.PAYMENT_REQUIRED);
     }
 }

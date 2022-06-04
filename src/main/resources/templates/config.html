@@ -1,0 +1,40 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>config</title>
+</head>
+<body>
+
+<div>This is Configuration</div>
+
+<div>
+    <form action="/config" method="POST">
+        <!--label for="nickname" class="form-label">nickname</label>
+        <input type="text" name="nickname" th:value="${nickname}" id="nickname"-->
+
+        <!--/*
+            만약 설정을 추가를 원한다면 config.html에 추가해주고, ConfigEnum, ConfigModel에 추가해주면 됨
+         */-->
+
+        <div>
+            <label class="form-label">open scope</label>
+            <div>
+                <input type="radio" id="private" name="scope" value="false" th:checked="${config.public_scope eq 'false'}" >
+                <label for="private">Private</label>
+            </div>
+
+            <div>
+                <input type="radio" id="public" name="scope" value="true" th:checked="${config.public_scope eq 'true'}">
+                <label for="public">Public</label>
+            </div>
+        </div>
+
+        <button type="submit">submit</button>
+    </form>
+</div>
+
+</body>
+</html>
