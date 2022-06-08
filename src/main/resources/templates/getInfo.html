@@ -10,29 +10,42 @@
 
 <div>This is Check up</div>
 
-<div th:each="manu : ${manual}">
-    <div th:text="*{manu.fieldName}">
-
+<div th:id="*{item}" th:each="item:*{field.manual_field}">
+    <div th:text="${item.key}">
     </div>
-    <div th:text="*{manu.value}">
-
+    <div th:each="v:${item.value}">
+        <div th:text="*{v}"></div>
     </div>
 </div>
 
-<div th:if="cust != null"  th:each="cust : ${custom}">
-    <div th:text="*{cust.fieldName}">
+<hr>
 
+<div th:id="*{item}" th:each="item:*{field.custom_field}">
+    <div th:text="${item.key}">
     </div>
-
-    <div th:if="custom_value_form != null" th:each="custom_value_form : ${custom_value_form}">
-        <div th:text="*{custom_value_form.fieldName}">
-
-        </div>
-        <div th:text="*{custom_value_form.value}">
-
-        </div>
+    <div th:each="v:${item.value}">
+        <div th:text="*{v}"></div>
     </div>
+</div>
 
+<hr>
+
+<div th:id="*{item}" th:each="item:*{field.manual_percent}">
+    <div th:text="${item.key}">
+    </div>
+    <div th:each="v:${item.value}">
+        <div th:text="*{v}"></div>
+    </div>
+</div>
+
+<hr>
+
+<div th:id="*{item}" th:each="item:*{field.custom_percent}">
+    <div th:text="${item.key}">
+    </div>
+    <div th:each="v:${item.value}">
+        <div th:text="*{v}"></div>
+    </div>
 </div>
 
 </body>

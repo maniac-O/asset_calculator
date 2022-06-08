@@ -47,17 +47,16 @@ public class InfoController {
 
     @GetMapping("/getInfo")
     public String getInfo(Model model, HttpServletRequest request) {
-        Member Member = memberFromSession.convert(request);
+        Member member = memberFromSession.convert(request);
 
-        HashMap<String, ArrayList<Field>> field = infoService.getField(Member);
-        model.addAttribute("manual", field.get("manual_field"));
-        model.addAttribute("custom", field.get("custom_field"));
+        HashMap<String, HashMap<String, String[]>> field = infoService.getField(member);
 
-        if (field.get("custom_field") != null) {
-            String[] custom_values = infoService.parsingCustomField(field.get("custom_field").get(0).getValue());
-            model.addAttribute("custom_value_form",
-                    new CustomFieldValues(custom_values[0],custom_values[1]));
+        if (field.isEmpty()) {
+            field.put("custom_field", null);
+            field.put("manual_field", null);
         }
+
+        model.addAttribute("field", field);
 
 
         return "getInfo";
@@ -91,7 +90,7 @@ public class InfoController {
 
         // 모든 검증 이후 saveField()를 호출함
         try {
-            infoService.saveField(member.getUid(),((HashMap)parsedInput.get(0)), ((HashMap)parsedInput.get(1)));
+            infoService.saveField(member, parsedInput);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

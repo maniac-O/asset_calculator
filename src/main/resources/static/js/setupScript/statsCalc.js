@@ -13,6 +13,7 @@ let market_percent = document.querySelector("#MARKET_percent")
 let etc = document.querySelector("#ETC")
 let etc_percent = document.querySelector("#ETC_percent")
 
+finalTotal.disabled = true
 bankAccount.disabled = true
 market.disabled = true
 etc.disabled = true

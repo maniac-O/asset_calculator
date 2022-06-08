@@ -6,11 +6,13 @@
     <link href="/css/setupPrice.css" rel="stylesheet">
 </head>
 <body>
-    <form action="/" method="GET" id="setupForm">
+    <form action="/" method="POST" id="setupForm">
         <div class="wrap-setupData" th:id="'wrap-'+*{v}" th:each="v, i : ${fieldGroup}">
             <div th:class="labelSetUpData" th:text="*{v}"></div>
-            <input type="number" class="setupData" th:id="*{v}"/>
-            <span class="percent" th:id="*{v}+'_percent'"></span>
+            <input class="setupData" th:id="*{v}"/>
+            <span th:if="*{v} != 'FINALTOTAL'" class="percent" th:id="*{v}+'_percent'"></span>
+            <button th:if="*{v} != 'FINALTOTAL'" type="button" th:class="addButton" th:id="*{v}+'_add'" > Add Element</button>
+            <div th:if="*{v} != 'FINALTOTAL'" th:id="*{v}+'_child'"></div>
         </div>
         <div id="valid-overload"></div>
     </form>

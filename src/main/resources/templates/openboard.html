@@ -9,6 +9,56 @@
 <body>
 <!--/* 오픈된 계정들의 정보 공유 게시판 */-->
 <div>This is open board</div>
+<hr>
 
+<div th:each="board:${boards}">
+    <div th:text="*{board.updateTime}">
+    </div>
+    <div th:text="*{board.displayName}">
+    </div>
+
+    <hr width="95%">
+
+    <div th:id="*{item}" th:each="item:*{board.data.manual_field}">
+        <div th:text="${item.key}">
+        </div>
+        <div th:each="v:${item.value}">
+            <div th:text="*{v}"></div>
+        </div>
+    </div>
+    <hr width="95%">
+
+    <div th:id="*{item}" th:each="item:*{board.data.custom_field}">
+        <div th:text="${item.key}">
+        </div>
+        <div th:each="v:${item.value}">
+            <div th:text="*{v}"></div>
+        </div>
+    </div>
+    <hr width="95%">
+
+    <div th:id="*{item}" th:each="item:*{board.data.manual_percent}">
+        <div th:text="${item.key}">
+        </div>
+        <div th:each="v:${item.value}">
+            <div th:text="*{v}"></div>
+        </div>
+    </div>
+    <hr width="95%">
+
+    <div th:id="*{item}" th:each="item:*{board.data.custom_percent}">
+        <div th:text="${item.key}">
+        </div>
+        <div th:each="v:${item.value}">
+            <div th:text="*{v}"></div>
+        </div>
+    </div>
+    <hr>
+
+</div>
+<div class="last-index" th:id="${lastIndex}"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/js/BoardScript/InfiniteScroll.js"></script>
 </body>
 </html>

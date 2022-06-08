@@ -16,6 +16,7 @@
         <div><a href="/setupprice" th:if="*{accessToken != 'ANONYMOUS'}">First: Go to Setup</a></div>
         <div><a href="/getInfo" th:if="*{accessToken != 'ANONYMOUS'}">Second: Check up Setup</a></div>
         <div><a href="/config" th:if="*{accessToken != 'ANONYMOUS'}">Third: User Configuration</a></div>
+        <div><a href="/openboard" th:if="*{accessToken != 'ANONYMOUS'}">Fourth: Open Board, Check out Other User's Info</a></div>
         <div><a href="/logout" th:if="*{accessToken != 'ANONYMOUS'}">Logout</a></div>
         <div><a href="/login" th:unless="*{accessToken != 'ANONYMOUS'}">Login</a></div>
     </div>
