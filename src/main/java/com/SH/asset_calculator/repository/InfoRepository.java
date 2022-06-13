@@ -23,42 +23,39 @@ public class InfoRepository {
         FIREBASE = FirestoreClient.getFirestore();
     }
 
-    public void setScope(Member member, String stat){
+    public Boolean setScope(Member member, String stat){
         getFirebase();
 
-        if (stat.equals("true")) {
-            HashMap<String, Object> param = new HashMap<>();
+        HashMap<String, Object> param = new HashMap<>();
 
-            param.put("displayName", member.getDisplayName());
-            param.put("updateTime", new Timestamp(System.currentTimeMillis()));
+        param.put("displayName", member.getDisplayName());
+        param.put("updateTime", new Timestamp(System.currentTimeMillis()));
 
 
-            WriteResult writeResult = null;
-
+        WriteResult writeResult = null;
+        if(stat.equals("true")) {
             try {
-
-                param.put("index", Integer.parseInt(FIREBASE.collection(PUBLIC_SCOPE.label()).orderBy("index", Query.Direction.DESCENDING).limit(1).get().get().getDocuments().get(0).getData().get("index").toString())+1);
+                param.put("index", FIREBASE.collection(FIELDNAME.label()).document(member.getUid()).get().get().get("index"));
 
                 // field를 가져와서 public scope에 넣어줘야함
                 writeResult = FIREBASE.collection(PUBLIC_SCOPE.label()).document(member.getUid()).set(getField(member)).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                return false;
             } catch (ExecutionException e) {
                 e.printStackTrace();
+                return false;
             }
 
-            if ( writeResult.getUpdateTime() != null)
+            if (writeResult.getUpdateTime() != null)
                 FIREBASE.collection(PUBLIC_SCOPE.label()).document(member.getUid()).set(param, SetOptions.merge());
-
-
-
-
-
-        }else if (stat.equals("false")){
+        }else if(stat.equals("false")){
             FIREBASE.collection(PUBLIC_SCOPE.label()).document(member.getUid()).delete();
         }
 
-        log.info("successfully change scope stat 'UID: "+ member.getUid() +"', 'changed stat: "+stat+"'");
+
+        log.info("successfully change scope stat 'UID: " + member.getUid() + "', 'changed stat: " + stat + "'");
+        return true;
     }
 
     public void setConfig(Member member, HashMap param){
@@ -88,22 +85,27 @@ public class InfoRepository {
         return documentSnapshot;
     }
 
-    public boolean insertField(Member member, HashMap<String, String> manual_field, HashMap<String, ArrayList<String>> custom_field, HashMap<String, String> manual_percent, HashMap<String, String> custom_percent ){
+    public boolean setField(String target, Member member, HashMap<String, HashMap<String, HashMap>> param, Integer index){
         getFirebase();
-        HashMap<String, HashMap<String, HashMap>> param = new HashMap<>();
-        HashMap<String, HashMap> p1 = new HashMap<>();
-        HashMap<String, HashMap> p2 = new HashMap<>();
-        p1.put("manual_field", manual_field);
-        p1.put("custom_field", custom_field);
-        p2.put("manual_percent", manual_percent);
-        p2.put("custom_percent", custom_percent);
-        param.put("finance", p1);
-        param.put("percent", p2);
-
         try {
 
-            FIREBASE.collection(FIELDNAME.label()).document(member.getUid())
-                    .set(param);
+            WriteBatch batch = FIREBASE.batch();
+            DocumentReference target_price_latest = FIREBASE.collection(target).document(member.getUid());
+            DocumentReference target_price_history = FIREBASE.collection(PRICE_HISTORY.label()).document(member.getUid());
+
+            // target : price_latest
+            batch.set(target_price_latest, param);
+            batch.update(target_price_latest, "index", index);
+
+            // target : price_history
+            HashMap<String, Object> history_param = new HashMap<>();
+            history_param.put(index.toString(), param);
+
+            batch.set(target_price_history, history_param, SetOptions.merge());
+            batch.update(target_price_history, "index", index);
+
+            batch.commit();
+
         } catch (Exception e) {
             log.error(e.getMessage());
             return false;
@@ -129,5 +131,19 @@ public class InfoRepository {
         }
 
         return documentSnapshot1;
+    }
+
+    public Integer getIndex(){
+        getFirebase();
+        try {
+            return Integer.parseInt(FIREBASE.collection(FIELDNAME.label()).orderBy("index", Query.Direction.DESCENDING).limit(1)
+                    .get().get().getDocuments().get(0).getData().get("index").toString());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

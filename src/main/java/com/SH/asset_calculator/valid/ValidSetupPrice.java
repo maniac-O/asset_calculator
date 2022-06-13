@@ -12,9 +12,18 @@ import java.util.HashMap;
 @Component
 public class ValidSetupPrice {
 
-    public boolean valid(Member member, HashMap<String, String> baseMap, HashMap<String, ArrayList<String>> validMap){
-        HashMap<String,Integer> validValue = new HashMap<>();
+    public boolean valid(Member member, ArrayList<Object> dataSet){
+        if (dataSet.size() < 4)
+            return false;
 
+        for (int i = 0; i < 4; i++) {
+            if (dataSet.get(i) == null)
+                return false;
+        }
+
+        HashMap<String, String> baseMap = (HashMap) dataSet.get(0);
+        HashMap<String, ArrayList<String>> validMap = (HashMap) dataSet.get(1);
+        HashMap<String,Integer> validValue = new HashMap<>();
 
         for (String key :validMap.keySet() ) {
             validValue.put(validMap.get(key).get(0), 0);
@@ -28,7 +37,6 @@ public class ValidSetupPrice {
                 log.warn("Valid is Failed 'UID: "+member.getUid()+"'");
                 return false;
             }
-
         }
 
 

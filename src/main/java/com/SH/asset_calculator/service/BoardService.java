@@ -30,6 +30,7 @@ public class BoardService {
 
     public ArrayList<Board> getLastBoard(String index) {
         List<QueryDocumentSnapshot> result = boardRepository.getMoreBoard(index);
+        System.out.println("result.get() = " + result.get(0).getId());
         return boardsToArrayList(result);
     }
 
@@ -44,9 +45,10 @@ public class BoardService {
 
             HashMap<String, HashMap<String, String[]>> param = converter.stringToFieldForm(data);
 
+            // todo: item.getId() --> item.get("id").toString() 으로 변경해줘야함
             Board board = new Board(Timestamp.valueOf(item.get("createTime").toString().replace("T"," ").split("\\.")[0]),
                     Timestamp.valueOf(item.get("updateTime").toString().replace("T"," ").split("\\.")[0]),
-                    item.get("displayName").toString(), item.get("id").toString(), item.get("reference").toString(), Integer.parseInt(item.get("index").toString()), param);
+                    item.get("displayName").toString(), item.getId(), item.get("reference").toString(), Integer.parseInt(item.get("index").toString()), param);
             boards.add(board);
         }
 

@@ -86,11 +86,9 @@ public class InfoController {
             return "index";
         model.addAttribute("member", member);
 
-        ArrayList parsedInput = infoService.parseInput(member, dataSet);
-
         // 모든 검증 이후 saveField()를 호출함
         try {
-            infoService.saveField(member, parsedInput);
+            infoService.setField(member, dataSet);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

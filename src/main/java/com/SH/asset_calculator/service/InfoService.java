@@ -2,6 +2,7 @@ package com.SH.asset_calculator.service;
 
 import com.SH.asset_calculator.converter.Converter;
 import com.SH.asset_calculator.domain.ConfigModel;
+import com.SH.asset_calculator.domain.FirebaseCollectionEnum;
 import com.SH.asset_calculator.domain.Member;
 import com.SH.asset_calculator.exception.BadArgumentException;
 import com.SH.asset_calculator.repository.InfoRepository;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+
+import static com.SH.asset_calculator.domain.FirebaseCollectionEnum.FIELDNAME;
+import static com.SH.asset_calculator.domain.FirebaseCollectionEnum.PRICE_HISTORY;
 
 @Slf4j
 @Service
@@ -64,6 +68,47 @@ public class InfoService {
         return new ConfigModel(hashMap.get("scope"));
     }
 
+
+
+    public Boolean setField(Member member, Map dataSet) throws ExecutionException, InterruptedException, BadArgumentException {
+
+        HashMap<String, HashMap<String, HashMap>> params = parsingParam(parseInput(member, dataSet));
+        Integer index = infoRepository.getIndex()+1;
+
+        boolean result = infoRepository.setField(FIELDNAME.label(), member, params, index);
+
+        ConfigModel info = getInfo(member);
+        if (info.getPublic_scope().equals("true")) {
+            result = infoRepository.setScope(member, info.getPublic_scope());
+        }
+
+        return result;
+    }
+
+    public HashMap<String, HashMap<String, String[]>> getField(Member member) {
+        // get data from Firebase
+        DocumentSnapshot field = infoRepository.getField(member);
+        infoRepository.getIndex();
+
+        return converter.stringToFieldForm(field.getData().toString());
+    }
+
+    // setupprice 페이지에서 넘겨준 데이터를 infoRepository에 전달해주기 전 데이터 변형
+    private HashMap<String, HashMap<String, HashMap>> parsingParam(ArrayList params){
+
+        HashMap<String, HashMap<String, HashMap>> param = new HashMap<>();
+        HashMap<String, HashMap> p1 = new HashMap<>();
+        HashMap<String, HashMap> p2 = new HashMap<>();
+
+        p1.put("manual_field", (HashMap) params.get(0));
+        p1.put("custom_field",(HashMap) params.get(1));
+        p2.put("manual_percent", (HashMap) params.get(2));
+        p2.put("custom_percent", (HashMap) params.get(3));
+        param.put("finance", p1);
+        param.put("percent", p2);
+
+        return param;
+    }
     public ArrayList parseInput(Member member, Map dataSet) throws BadArgumentException {
         JSONParser parser = new JSONParser(dataSet.get("list").toString());
         ArrayList<Object> dataArr = null;
@@ -111,35 +156,9 @@ public class InfoService {
         if (((HashMap) dataArr.get(0)).containsValue(""))
             throw new BadArgumentException("BadArug");
 
-        if (!validSetupPrice.valid(member, ((HashMap) dataArr.get(0)), ((HashMap) dataArr.get(1))))
+        if (!validSetupPrice.valid(member, dataArr))
             throw new BadArgumentException("custom field's value is bad argu");
 
         return dataArr;
-    }
-
-    public Boolean saveField(Member member, ArrayList params) throws ExecutionException, InterruptedException {
-
-
-        return infoRepository.insertField(member, (HashMap<String, String>) params.get(0), (HashMap<String, ArrayList<String>>) params.get(1),
-                (HashMap<String, String>) params.get(2),(HashMap<String, String>) params.get(3));
-    }
-
-    public HashMap<String, HashMap<String, String[]>> getField(Member member) {
-        // get data from Firebase
-        DocumentSnapshot field = infoRepository.getField(member);
-
-        return converter.stringToFieldForm(field.getData().toString());
-    }
-
-    public String[] parsingCustomField(String custom_field) {
-        // split code
-        String[] chars = {"[", "]", "\""};
-
-        for (int i = 0; i < chars.length; i++) {
-            custom_field = custom_field.replace(chars[i], "");
-        }
-        String[] custom_values = custom_field.split(",");
-
-        return custom_values;
     }
 }

@@ -3,7 +3,8 @@ package com.SH.asset_calculator.domain;
 public enum FirebaseCollectionEnum {
     FIELDNAME ("price_latest"),
     CONFIGNAME ("configuration"),
-    PUBLIC_SCOPE ("public_scope");
+    PUBLIC_SCOPE ("public_scope"),
+    PRICE_HISTORY ("price_history");
 
     private final String label;
 

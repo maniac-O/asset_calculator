@@ -32,7 +32,6 @@ public class BoardRepository {
         // start pagination
         CollectionReference public_scope = FIREBASE.collection(PUBLIC_SCOPE.label());
         Query q = public_scope.orderBy("index", Query.Direction.DESCENDING).limit(PAGE_LIMIT);
-
 /*
         // 셈플자료 20개 입력
         try {
@@ -45,7 +44,9 @@ public class BoardRepository {
 
                     param.put("displayName", member.getDisplayName());
                     param.put("updateTime", new java.sql.Timestamp(System.currentTimeMillis()));
-                    param.put("index", Integer.parseInt(FIREBASE.collection(PUBLIC_SCOPE.label()).orderBy("index", Query.Direction.DESCENDING).limit(1).get().get().getDocuments().get(0).getData().get("index").toString())+1);
+                    int index = Integer.parseInt(FIREBASE.collection(PUBLIC_SCOPE.label()).orderBy("index", Query.Direction.DESCENDING).limit(1).get().get().getDocuments().get(0).getData().get("index").toString()) + 1;
+                    System.out.println("index = " + index);
+                    param.put("index", index);
 
                     FIREBASE.collection(PUBLIC_SCOPE.label()).document(member.getUid() + i).update(param);
                 }

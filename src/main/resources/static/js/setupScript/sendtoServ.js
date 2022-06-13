@@ -64,25 +64,14 @@ add.addEventListener('click', ()=>{
 
 function calcPercent_small(){
     let extra_value = document.querySelectorAll('.extra-value')
-    //let extra_group = document.querySelectorAll('.extra-group')
     for (let i = 0; i < extra_value.length; i++) {
         extra_value[i].oninput = ()=>{
             targets = document.querySelectorAll('.'+extra_value[i].className.split(' ')[2]);
             for (const target of targets) {
-                //console.log(target.className.split(' ')[0].substr(-1))
                 calcPercent_update(target.className.split(' ')[0].substr(-1))
             }
-            // calcPercent_update(extraMap[i])
         }
     }
-    /*
-    for (let i = 0; i < extra_group.length; i++) {
-        extra_group[i].onchange = ()=>{
-            calcPercent_update(extraMap[i])
-        }
-    }
-
-     */
 }
 
 function deleteExtraItem(i){
@@ -96,10 +85,9 @@ function calcPercent_update(i){
 
     let extra_group = document.querySelector('.dataset'+(i)+'.extra-group')
     let base_money = 0;
-    let current_money = 0
-    let percent = document.querySelector('.dataset'+(i)+'.extra-percent')
-
+    let percents = document.querySelectorAll('.extra-percent')
     let group_values = document.querySelectorAll('.'+ extra_group.value +'-value')
+    let values = document.querySelectorAll('.extra-value')
 
     // 현재 그룹의 총 자산 계산
     for (const groupValue of group_values) {
@@ -110,35 +98,6 @@ function calcPercent_update(i){
         base_money += value
     }
     document.querySelector('#'+extra_group.value).value = base_money
-
-
-    if (base_money == 0)
-        base_money = 1
-
-    let extra_values = scanExtraValues()
-    let extra_groups = scanExtraGroups()
-
-
-    for (let i = 0; i < extra_groups.length; i++) {
-        if(extra_groups[i].value === extra_group.value){
-            if (isNaN(extra_values[i].value) || extra_values[i].value.length === 0)
-                continue
-            current_money += parseInt(extra_values[i].value)
-        }
-    }
-
-    let cur_value = parseInt(document.querySelector('.dataset'+ (i)+'.extra-value').value)
-    if (cur_value.length === 0 || isNaN(cur_value))
-        cur_value = 0
-
-    if (base_money.length === 0 || isNaN(base_money)){
-        base_money = 0
-        percent.innerHTML = '0%'
-    }else
-        // 여기에 퍼센테지 보여주기
-        percent.innerHTML = Math.floor(cur_value / parseInt(base_money) * 100) + '%'
-
-    // ==========================================================
 
 
     // 전체 총 자산 계산
@@ -164,6 +123,25 @@ function calcPercent_update(i){
     }
 
 
+    // custom_field 자산 계산
+    // 모든 custom_field 퍼센트 변경
+    for (let i = 0; i < percents.length; i++) {
+        cur_value = parseInt(values[i].value)
+
+        if (cur_value.length === 0 || isNaN(cur_value))
+            cur_value = 0
+
+        if (base_money.length === 0 || isNaN(base_money)){
+            percents[i].innerHTML = '0%'
+        }else{
+            // 여기에 퍼센테지 보여주기
+            percents[i].innerHTML = Math.floor(cur_value / parseInt(total) * 100) + '%'
+        }
+    }
+
+
+    // ==========================================================
+
     /*
     // 퍼센트를 넘으면 출력
     if (base_money < current_money) {
@@ -171,15 +149,7 @@ function calcPercent_update(i){
     }else{
         percent.classList.remove('overValue')
     }
-
      */
-}
-
-function scanExtraValues(){
-    return document.querySelectorAll('.extra-value')
-}
-function scanExtraGroups(){
-    return document.querySelectorAll('.extra-group')
 }
 
 
@@ -236,7 +206,7 @@ submit.addEventListener('click', ()=>{
         type: "POST",
         success : function(data){
             console.log('success')
-            //form.submit()
+            form.submit()
         },
         error: function(errorThrown) {
             alert("잘못된 요청입니다.");
